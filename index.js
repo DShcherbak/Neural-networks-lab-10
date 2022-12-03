@@ -21,18 +21,26 @@ inputElement.addEventListener("change", (event) => {
     reader.readAsDataURL(selectedFile);
 }, false);
 
-async function predictLabels() {
-    const fileImg = document.getElementById("previewImage");
-    const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0).div(tf.scalar(255)).reshape([1,-1]);
+function predictLabels() {
+    const img = document.getElementById("previewImage");
+
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    console.log(canvas[0][0]);
+
+    const tensor = tf.browser.fromPixels(img, 1).expandDims(0);
     
-    const convModel = await tf.loadLayersModel('CNN/model.json');
+    const convModel =  tf.loadLayersModel('CNN/model.json'); //aw
     const convPrediction = convModel.predict(tensor.dataSync());
+    
 	
   //  const perceptronModel = await tf.loadLayersModel('Perceptron/model.json');
   //  const perceptronPrediction = perceptronModel.predict(tensor).dataSync();
 	
-    const response = await fetch('categories.json');
-    const categories = await response.json();
+    const response =  fetch('categories.json'); //aw
+    const categories =  response.json(); //aw
     const convLabel = Object.keys(categories)
     .find(key => categories[key].findIndex(x => x == 1) == 
                  convPrediction.findIndex(x => x == 1));
