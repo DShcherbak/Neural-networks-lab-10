@@ -1,3 +1,5 @@
+import * as tf from '@tensorflow/tfjs';
+
 const inputElement = document.getElementById("fileInput");
 inputElement.addEventListener("change", (event) => {
     const existingImg = document.getElementById("previewImage");
@@ -23,7 +25,8 @@ inputElement.addEventListener("change", (event) => {
 async function predictLabels() {
     const fileImg = document.getElementById("previewImage");
     const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
-	 tensor = tf.math.divide(tensor, tf.constant(255))
+    var norm = tf.constant(255)
+	  tensor = tf.math.divide(tensor, norm)
     const convModel = await tf.loadLayersModel('CNN/model.json');
     const convPrediction = convModel.predict(tensor.dataSync());
 	
@@ -46,3 +49,5 @@ async function predictLabels() {
     predictionText.innerHTML = convLabel;// + " / " + perceptronLabel;
     predictionArea.classList.remove('d-none');
 }
+
+console.log(2 + 5)
