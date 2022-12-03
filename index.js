@@ -25,6 +25,8 @@ async function predictLabels() {
     const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
     var tf1 = tf.scalar(255)
     var tensor2 = tensor.div(tf1)
+    tf.reshape(tensor2, tensor)
+    
     const convModel = await tf.loadLayersModel('CNN/model.json');
     const convPrediction = convModel.predict(tensor2.dataSync());
 	
