@@ -1,3 +1,4 @@
+
 const inputElement = document.getElementById("fileInput");
 inputElement.addEventListener("change", (event) => {
     const existingImg = document.getElementById("previewImage");
@@ -22,13 +23,10 @@ inputElement.addEventListener("change", (event) => {
 
 async function predictLabels() {
     const fileImg = document.getElementById("previewImage");
-    const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
-    var tf1 = tf.scalar(255)
-    var tensor2 = tensor.div(tf1)
-    tf.reshape(tensor2, tensor)
+    const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0).div(tf.scalar(255));
     
     const convModel = await tf.loadLayersModel('CNN/model.json');
-    const convPrediction = convModel.predict(tensor2.dataSync());
+    const convPrediction = convModel.predict(tensor.dataSync());
 	
   //  const perceptronModel = await tf.loadLayersModel('Perceptron/model.json');
   //  const perceptronPrediction = perceptronModel.predict(tensor).dataSync();
@@ -50,4 +48,3 @@ async function predictLabels() {
     predictionArea.classList.remove('d-none');
 }
 
-console.log(2 + 5)
