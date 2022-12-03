@@ -25,8 +25,12 @@ async function predictLabels() {
   const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
 
   console.log(tensor.shape)
-  const convnetModel = await tf.loadLayersModel('convnet/model.json');
-  const convnetPrediction = convnetModel.predict(tensor).dataSync();
+  var tensor2 = tensor.div(tf.scalar(255))
+  console.log(tensor2.shape)
+  tf.reshape(tensor2, tensor.shape)
+  consolr.log(tensor2.shape)
+  const convnetModel = await tf.loadLayersModel('CNN/model.json');
+  const convnetPrediction = convnetModel.predict(tensor2).dataSync();
   const response = await fetch('categories.json');
   const categories = await response.json();
   const predictionLabel = Object.keys(categories)
