@@ -24,9 +24,9 @@ async function predictLabels() {
     const fileImg = document.getElementById("previewImage");
     const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
     var tf1 = tf.scalar(255)
-    tensor = tensor.div(tf1)
+    var tensor2 = tensor.div(tf1)
     const convModel = await tf.loadLayersModel('CNN/model.json');
-    const convPrediction = convModel.predict(tensor.dataSync());
+    const convPrediction = convModel.predict(tensor2.dataSync());
 	
   //  const perceptronModel = await tf.loadLayersModel('Perceptron/model.json');
   //  const perceptronPrediction = perceptronModel.predict(tensor).dataSync();
