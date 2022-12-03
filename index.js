@@ -1,4 +1,3 @@
-
 const inputElement = document.getElementById("fileInput");
 inputElement.addEventListener("change", (event) => {
     const existingImg = document.getElementById("previewImage");
@@ -21,38 +20,22 @@ inputElement.addEventListener("change", (event) => {
     reader.readAsDataURL(selectedFile);
 }, false);
 
-function predictLabels() {
-    const img = document.getElementById("previewImage");
+async function predictLabels() {
+  const fileImg = document.getElementById("previewImage");
+  const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
+  console.log(tensor.shape())
+  console.log(tf.shape(tensor))
+  const convnetModel = await tf.loadLayersModel('convnet/model.json');
+  const convnetPrediction = convnetModel.predict(tensor).dataSync();
+  const response = await fetch('categories.json');
+  const categories = await response.json();
+  const predictionLabel = Object.keys(categories)
+  .find(key => categories[key].findIndex(x => x == 1) == 
+               convnetPrediction.findIndex(x => x == 1));
+  
+  const predictionText = document.getElementById('predictionText');
+  const predictionArea = document.getElementById('predictionArea');
 
-    var canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-    console.log(canvas[0][0]);
-
-    const tensor = tf.browser.fromPixels(img, 1).expandDims(0);
-    
-    const convModel =  tf.loadLayersModel('CNN/model.json'); //aw
-    const convPrediction = convModel.predict(tensor.dataSync());
-    
-	
-  //  const perceptronModel = await tf.loadLayersModel('Perceptron/model.json');
-  //  const perceptronPrediction = perceptronModel.predict(tensor).dataSync();
-	
-    const response =  fetch('categories.json'); //aw
-    const categories =  response.json(); //aw
-    const convLabel = Object.keys(categories)
-    .find(key => categories[key].findIndex(x => x == 1) == 
-                 convPrediction.findIndex(x => x == 1));
-				 
-//	 const perceptronLabel = Object.keys(categories)
-  //  .find(key => categories[key].findIndex(x => x == 1) == 
-    //             perceptronPrediction.findIndex(x => x == 1));
-    
-    const predictionText = document.getElementById('predictionText');
-    const predictionArea = document.getElementById('predictionArea');
-
-    predictionText.innerHTML = convLabel;// + " / " + perceptronLabel;
-    predictionArea.classList.remove('d-none');
+  predictionText.innerHTML = predictionLabel;
+  predictionArea.classList.remove('d-none');
 }
-
