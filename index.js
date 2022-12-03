@@ -23,7 +23,8 @@ inputElement.addEventListener("change", (event) => {
 async function predictLabels() {
   const fileImg = document.getElementById("previewImage");
   const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
-  console.log(tf.shape(tensor))
+
+  console.log(tensor.shape)
   const convnetModel = await tf.loadLayersModel('convnet/model.json');
   const convnetPrediction = convnetModel.predict(tensor).dataSync();
   const response = await fetch('categories.json');
