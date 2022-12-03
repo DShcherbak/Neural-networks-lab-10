@@ -1,5 +1,3 @@
-import * as tf from '@tensorflow/tfjs';
-
 const inputElement = document.getElementById("fileInput");
 inputElement.addEventListener("change", (event) => {
     const existingImg = document.getElementById("previewImage");
