@@ -24,20 +24,20 @@ async function predictLabels() {
 
   const fileImg = document.getElementById("previewImage");
     const tensor = tf.browser.fromPixels(fileImg, 1).expandDims(0);
-    const convnetModel = await tf.loadLayersModel('CNN/model.json');
+    const convModel = await tf.loadLayersModel('CNN/model.json');
     var tensor2 = tensor.div(tf.scalar(255))
   console.log(tensor2.shape)
  // tensor.print()
  // tensor2.print()
   //tf.reshape(tensor2, tensor.shape)
   //console.log(tensor2.shape)
-    const convnetPrediction = convnetModel.predict(tensor2).dataSync();
-    console.log(convnetPrediction)
+    const prediction = convModel.predict(tensor2).dataSync();
+    console.log(prediction)
     var max_prediction = [0,0,0], max_index = [0,0,0]
-    for(var i = 0; i < convnetPrediction.length; i++){
+    for(var i = 0; i < prediction.length; i++){
       for(var j = 0; j < max_prediction.length; j++){
-        if(convnetPrediction[i] > max_prediction[j]){
-          max_prediction[max_prediction.length-1] = convnetPrediction[i]
+        if(prediction[i] > max_prediction[j]){
+          max_prediction[max_prediction.length-1] = prediction[i]
           max_index[max_index.length-1] = i
           for(var k = max_prediction.length-1; k > j; k--){
             max_prediction[k] = [max_prediction[k-1], max_prediction[k-1] = max_prediction[k]][0];
