@@ -30,7 +30,7 @@ async function predictLabels() {
   tf.reshape(tensor2, tensor.shape)
   console.log(tensor2.shape)
   const convnetModel = await tf.loadLayersModel('CNN/model.json');
-  const convnetPrediction = convnetModel.predict(tensor2).dataSync();
+  const convnetPrediction = convnetModel.predict(tensor2.dataSync());
   const response = await fetch('categories.json');
   const categories = await response.json();
   const predictionLabel = Object.keys(categories)
